@@ -1,65 +1,120 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState, useEffect } from "react";
+import Carosal from "../components/carosal";
+import { CiMail, CiLock, CiUnlock } from "react-icons/ci";
+import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import PreLoader from "@/components/preloader";
+
+const Page = () => {
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    if(email=== "" || password===""){
+        setMessage("Please fill all the fields")
+        return
+    }
+
+    if(password.length < 6){
+        setMessage("Password must be at least 6 characters long");
+        return
+    }
+
+    try {
+        setLoading(true);
+        setMessage("");
+        const response = await axios.post('http://localhost:3000/auth/login', {
+            email,
+            password
+        }, { withCredentials: true });
+        if(response.status==200){
+            setMessage(response.data.message)
+            router.push('/protected/products')
+        }else {
+            setMessage(response.data.message)
+        }
+      
+    } catch (error) {
+        setMessage("Login failed. Please try again.");
+    } finally {
+        setLoading(false);
+    }
+
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <div className="flex bg-white min-h-screen">
+      <div className="w-1/2 hidden md:block">
+        <h1 className="absolute z-50 m-5 text-3xl font-bold">Magic Clay</h1>
+        <Carosal />
+      </div>
+
+      <div className="flex flex-col w-full sm:w-1/3 justify-center items-center p-8">
+        <div className="max-w-md">
+          <h1 className="text-3xl text-center sm:hidden font-bold mb-8">Magic Clay</h1>
+          <h1 className="text-4xl font-medium mt-6 mb-6">Login</h1>
+
+
+          <form className="relative w-full" onSubmit={handleSubmit}>
+            <label className="font-semibold block mb-1">Email</label>
+            <CiMail className="absolute right-3 top-10 text-gray-400 pointer-events-none" />
+            <input
+              type="email"
+              onChange={(e)=>setEmail(e.target.value)}
+              className="w-full border border-gray-300 rounded-md py-2 pr-10 pl-3 mb-4
+                          focus:outline-none focus:ring-2 focus:ring-black"
+              placeholder="Enter your email"
+              required
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+            <label className="font-semibold">Password</label>
+            {showPassword ? (
+              <CiUnlock
+                className="absolute right-3 top-33 text-gray-400 cursor-pointer"
+                onClick={() => setShowPassword(false)}
+              />
+            ) : (
+              <CiLock
+                className="absolute right-3 top-33 text-gray-400 cursor-pointer"
+                onClick={() => setShowPassword(true)}
+              />
+            )}
+            <input
+              type={showPassword ? "text" : "password"}
+              onChange={(e)=>setPassword(e.target.value)}
+              className="w-full border border-gray-300 rounded-md p-2 mt-2 mb-4"
+              placeholder="Enter Your Password"
+              required
+            />
+
+            {message && <p className="text-sm mt-3 text-red-500 mb-3">{message}</p>}
+          
+          <button 
+          type="submit"
+          className='w-full bg-black text-white py-2 mt-4 rounded-md hover:bg-gray-950 cursor-pointer font-semibold transition'>
+          Login
+          </button>
+          </form>
+
+          { loading && <PreLoader /> }
+
+          <p className="text-sm mt-3 text-gray-500 font-semibold">Don&apos;t Have an Account? <Link href="/register" className="text-black hover:underline">Register</Link></p>
         </div>
-      </main>
+      </div>
     </div>
-  );
+  )
 }
+
+export default Page
