@@ -3,10 +3,15 @@
 import { useState } from "react";
 import Image from "next/image";
 import { MdSearch, MdClose } from "react-icons/md";
-import LogOut from "./logout";
+import { usePathname } from "next/navigation";
+import { useUser } from '@/context/usersContext'
 
-const Header = () => {
+
+
+const Header = ({ name }) => {
   const [showSearch, setShowSearch] = useState(false);
+  const pathname = usePathname();
+  const { user } = useUser();
 
   return (
     <header className="w-full min-h-[10vh] bg-white rounded-br-2xl shadow-md">
@@ -16,9 +21,9 @@ const Header = () => {
           Magic Clay
         </h1>
 
-        <h3 className="text-sm md:text-xl font-medium text-gray-700"> My Products </h3>
+        <h3 className="text-sm md:text-xl font-medium text-gray-700"> {name} </h3>
 
-        <div className="hidden md:flex items-center gap-2 border-b border-gray-400 focus-within:border-black w-[30vw]">
+        <div className={`${pathname==="/home/account" ? 'invisible' : '' } hidden md:flex items-center gap-2 border-b border-gray-400 focus-within:border-black w-[30vw]`}>
           <MdSearch size={24} className="text-gray-600" />
           <input
             type="text"
@@ -38,7 +43,7 @@ const Header = () => {
         <div className="flex items-center gap-2">
           <div className="text-right leading-tight hidden md:block">
             <p className="font-semibold text-black text-sm md:text-base">
-              Amal
+              {user.name}
             </p>
             <p className="text-[10px] md:text-xs text-gray-500">
               Buyer
@@ -47,7 +52,7 @@ const Header = () => {
 
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border">
             <Image
-              src="/favicon.ico"
+              src="/avatar.jpg"
               alt="Profile Picture"
               width={40}
               height={40}

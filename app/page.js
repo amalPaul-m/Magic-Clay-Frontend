@@ -41,7 +41,7 @@ const Page = () => {
         }, { withCredentials: true });
         if(response.status==200){
             setMessage(response.data.message)
-            router.push('/protected/products')
+            router.push('/home/products')
         }else {
             setMessage(response.data.message)
         }
