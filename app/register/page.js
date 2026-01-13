@@ -39,13 +39,14 @@ const Page = () => {
                 email,
                 password
             });
-            console.log('check the error'+response)
+
             if(response.status==201){
                 setMessage(response.data.message)
-                router.push('/verify-otp?email='+email)
+                router.push('/verify-otp')
             }
+
         } catch (error) {
-            setMessage("Registration failed. Please try again.");
+            setMessage("User Alredy Exist! Try Another Email");
         } finally {
             setLoading(false);
         }
@@ -128,7 +129,7 @@ const Page = () => {
               placeholder="Confirm Your Password"
             />
 
-            <p>{message}</p>
+            <p className="text-red-500">{message}</p>
 
           <button type="submit" className="w-full bg-black text-white py-2 mt-4 rounded-md hover:bg-gray-950 cursor-pointer font-semibold transition">Register</button>
           </form>

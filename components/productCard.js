@@ -1,11 +1,17 @@
 "use client";
+
 import Image from "next/image";
-const ProductCard = () => {
+import { useCart } from "@/context/cartContext"
+
+const ProductCard = ({item}) => {
+
+  const { addToCart } = useCart();
+
   return (
-    <div className="group relative h-65 w-45 overflow-hidden rounded-xl cursor-pointer">
+    <div className="group relative h-65 w-45 overflow-hidden rounded-xl">
       
       <Image
-        src="/sliderImg1.jpeg" 
+        src={item?.img_url} 
         alt="Product"
         fill
         className="absolute inset-0 h-full w-full object-cover"
@@ -15,14 +21,14 @@ const ProductCard = () => {
 
       <div className="absolute bottom-0 z-20 h-32 w-full translate-y-full rounded-t-xl bg-white/90 p-3 transition-transform duration-300 ease-out group-hover:translate-y-0">
         <p className="pt-2 ps-2 text-lg font-bold text-gray-800">
-            Calco
+            {item.name}
         </p>
 
         <p className="ps-2 text-base font-medium text-gray-800">
-            ₹80.00
+            ₹{item.price}
         </p>
 
-        <button className="mt-3 ms-2 w-[calc(100%-1rem)] rounded-md bg-black py-1.5 text-sm font-semibold text-white transition hover:bg-gray-900">
+        <button onClick={()=>addToCart(item.id)} className="cursor-pointer mt-3 ms-2 w-[calc(100%-1rem)] rounded-md bg-black py-1.5 text-sm font-semibold text-white transition hover:bg-gray-900">
             Add to Cart
         </button>
       </div>

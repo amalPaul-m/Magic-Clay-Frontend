@@ -5,10 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MdInventory, MdShoppingCart, MdPerson, MdMenu, MdClose } from "react-icons/md";
 import LogoutButton from "./logout";
+import { useCart } from '@/context/cartContext'
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { cart } = useCart();
 
   return (
     <>
@@ -49,9 +51,9 @@ const Sidebar = () => {
           <ul className="space-y-4">
             <li>
               <Link
-                href="/protected/products"
+                href="/home/products"
                 onClick={() => setOpen(false)}
-                className={`flex items-center gap-3 ${pathname === '/protected/products' ? 'text-black' : 'text-gray-400'} font-medium hover:text-black transition`}
+                className={`flex items-center gap-3 ${pathname === '/home/products' ? 'text-black' : 'text-gray-400'} font-medium hover:text-black transition`}
               >
                 <MdInventory size={20} />
                 My Products
@@ -60,23 +62,23 @@ const Sidebar = () => {
 
             <li>
               <Link
-                href="/protected/cart"
+                href="/home/cart"
                 onClick={() => setOpen(false)}
-                className={`flex items-center gap-3 ${pathname === '/protected/cart' ? 'text-black' : 'text-gray-400'} font-medium hover:text-black transition`}
+                className={`flex items-center gap-3 ${pathname === '/home/cart' ? 'text-black' : 'text-gray-400'} font-medium hover:text-black transition`}
               >
                 <MdShoppingCart size={20} />
                 Cart
-                <span className={`absolute right-4 flex ${pathname === '/protected/cart' ? 'bg-black' : 'bg-gray-400'} h-5 w-5 items-center justify-center rounded-full hover:bg-black text-[12px] font-bold text-white`}>
-                  2
+                <span className={`absolute right-4 flex ${pathname === '/home/cart' ? 'bg-black' : 'bg-gray-400'} h-5 w-5 items-center justify-center rounded-full hover:bg-black text-[12px] font-bold text-white`}>
+                  {cart.length}
                 </span>
               </Link>
             </li>
 
             <li>
               <Link
-                href="/protected/profile"
+                href="/home/account"
                 onClick={() => setOpen(false)}
-                className={`flex items-center gap-3 ${pathname === '/protected/profile' ? 'text-black' : 'text-gray-400'} font-medium hover:text-black transition`}
+                className={`flex items-center gap-3 ${pathname === '/home/account' ? 'text-black' : 'text-gray-400'} font-medium hover:text-black transition`}
               >
                 <MdPerson size={20} />
                 Account

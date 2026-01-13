@@ -3,10 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import { MdSearch, MdClose } from "react-icons/md";
-import LogOut from "./logout";
+import { usePathname } from "next/navigation";
 
-const Header = () => {
+const Header = ({ name }) => {
   const [showSearch, setShowSearch] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="w-full min-h-[10vh] bg-white rounded-br-2xl shadow-md">
@@ -16,9 +17,9 @@ const Header = () => {
           Magic Clay
         </h1>
 
-        <h3 className="text-sm md:text-xl font-medium text-gray-700"> My Products </h3>
+        <h3 className="text-sm md:text-xl font-medium text-gray-700"> {name} </h3>
 
-        <div className="hidden md:flex items-center gap-2 border-b border-gray-400 focus-within:border-black w-[30vw]">
+        <div className={`${pathname==="/home/account" ? 'invisible' : '' } hidden md:flex items-center gap-2 border-b border-gray-400 focus-within:border-black w-[30vw]`}>
           <MdSearch size={24} className="text-gray-600" />
           <input
             type="text"
