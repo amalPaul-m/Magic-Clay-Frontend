@@ -18,6 +18,7 @@ const Page = () => {
   const [gender, setGender] = useState('')
 
   {loading && <PreLoader />}
+  
   return (
       <div className="flex min-h-screen flex-col">
 
